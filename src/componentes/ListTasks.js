@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import TaskForm from "./TaskForm";
 import Task from "./Task";
 import "../style-sheet/ListTasks.css";
+import { Button } from "./Button";
 
 function ListTasks() {
   const [tasks, setTasks] = useState([]);
+  const [filter, setFilter] = useState('all'); // Estado para el filtro
 
   const filteredTasks = tasks.filter(task => {
     if (filter === 'completed') {
@@ -12,9 +14,9 @@ function ListTasks() {
     } else if (filter === 'pending') {
       return !task.completed;
     } else {
-      return true; // 'all' filter
+      return true; 
     }
-  })
+  });
 
   const addTask = (task) => {
     //console.log(task);
@@ -38,18 +40,28 @@ function ListTasks() {
         return task;
   })
   setTasks(actualizedTask);
-}
+  }
 
   return (
     <>
       <TaskForm onSumbit={addTask} />
-      <div className="filter-buttons">
-        <button onClick={() => setFilter("all")}>All</button>
-        <button onClick={() => setFilter("completed")}>Completed</button>
-        <button onClick={() => setFilter("pending")}>Pending</button>
+      <div className = "button-container">
+        <Button 
+          text="Completed"
+          onClick={() => setFilter('completed')}
+        />
+    
+        <Button
+          text="Pending"
+          onClick={() => setFilter('pending')}
+        />
+        <Button
+          text="All"
+          onClick={() => setFilter('all')}
+        />
       </div>
       <div className="task-list-cont">
-        {tasks.map((task) => (
+        {filteredTasks.map(task =>
           <Task
             text={task.text}
             completed={task.completed}
@@ -58,7 +70,7 @@ function ListTasks() {
             deleteTask={deleteTask}
             completeTask={completeTask}
           />
-        ))}
+        )}
       </div>
     </>
   );
